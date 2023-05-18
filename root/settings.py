@@ -22,6 +22,7 @@ INSTALLED_APPS = [
 
     # Third party
     'rest_framework',
+    'drf_yasg',
     'mptt',
     'ckeditor_uploader',
 ]
@@ -95,3 +96,10 @@ MEDIA_ROOT = os.path.join(BASE_DIR / 'media')
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 CKEDITOR_UPLOAD_PATH = "uploads/"
+
+REST_FRAMEWORK = {
+    'DATE_INPUT_FORMATS': ["%H:%M %d-%m-%Y"],
+    'DATETIME_FORMAT': '%H:%M %d-%m-%Y',
+    'DEFAULT_PAGINATION_CLASS': 'apps.pagination.StandardResultsSetPagination',
+    'PAGE_SIZE': 2
+}

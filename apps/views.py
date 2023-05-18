@@ -42,28 +42,49 @@
 #     queryset = New.objects.all()
 #     serializer_class = NewModelSerializer
 #
-from rest_framework.decorators import action
-from rest_framework.generics import ListAPIView
 from rest_framework.response import Response
-from rest_framework.viewsets import ModelViewSet, GenericViewSet
+from rest_framework.viewsets import ModelViewSet
 
 from apps.models import New
-from apps.serializers import NewModelSerializer
+from apps.serializers import NewListModelSerializer, NewDetailModelSerializer
 
 
 class NewModelViewSet(ModelViewSet):
     queryset = New.objects.all()
-    serializer_class = NewModelSerializer
+    serializer_class = NewListModelSerializer
 
-    @action(methods=['GET'], detail=False, url_path='botirjonni-urli')
-    def report(self, request, pk=None):
-        return Response({'status': 'OK'})
+    def retrieve(self, request, *args, **kwargs):
+        instance = self.get_object()
+        instance.view_count += 1
+        instance.save()
+        serializer = NewDetailModelSerializer(instance)
+        return Response(serializer.data)
 
+    # def get_serializer_class(self):
+    #     if self.action == 'retrieve':
+    #         return NewDetailModelSerializer
+    #     return NewListModelSerializer
 
-class UserListAPIView(ListAPIView, GenericViewSet):
-    queryset = New.objects.all()
-    serializer_class = NewModelSerializer
+    # @action(methods=['GET'], detail=False, url_path='botirjonni-urli')
+    # def report(self, request, pk=None):
+    #     return Response({'status': 'OK'})
+    #
 
-    @action(methods=['GET'], detail=True, url_path='product', url_name='12321')
-    def report(self, request, id=None):
-        return Response({'status': id})
+# class UserListAPIView(ListAPIView, GenericViewSet):
+#     queryset = New.objects.all()
+#     serializer_class = NewModelSerializer
+#
+#     def list(self, request, *args, **kwargs):
+#         '''
+#         nimadir yozamiz
+#         user likni olish uchun
+#         :param request:
+#         :param args:
+#         :param kwargs:
+#         :return:
+#         '''
+#         return super().list(request, *args, **kwargs)
+#
+#     @action(methods=['GET'], detail=True, url_path='product', url_name='12321')
+#     def report(self, request, id=None):
+#         return Response({'status': id})
