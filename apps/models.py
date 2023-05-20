@@ -1,5 +1,6 @@
 from ckeditor.fields import RichTextField
-from django.db.models import Model, CharField, DateTimeField, IntegerField, ImageField, FileField, ForeignKey, CASCADE
+from django.db.models import Model, CharField, DateTimeField, IntegerField, ImageField, FileField, ForeignKey, CASCADE, \
+    OneToOneField
 
 
 class UseFulInfo(Model):
@@ -26,13 +27,13 @@ class Region(Model):
 
 class District(Model):
     name = CharField(max_length=255)
-    region = ForeignKey('apps.Region', CASCADE)
+    region = ForeignKey('apps.Region', CASCADE, 'districts')
 
 
 class ResponsiblePerson(Model):
     full_name = CharField(max_length=255)
     phone = CharField(max_length=500)
-    district = ForeignKey('apps.District', CASCADE)
+    district = OneToOneField('apps.District', CASCADE)
 
 
 
@@ -43,7 +44,7 @@ class ResponsiblePerson(Model):
         "name": "Toshkent",
         "districts":[
             {
-                "district": "Yunusobod tumani",
+                "name": "Yunusobod tumani",
                 "full_name": "Бакиров Тимур Жолдасбаевич",
                 "phone": "612227089"
             }
@@ -51,8 +52,19 @@ class ResponsiblePerson(Model):
     }
 ]
 
-
-
-
-
+ {
+    "districts": [
+      {
+        "name": "yunusobod tumani",
+        "full_name": "Раимов Акбар Абдурашитович",
+        "phone": "755921629"
+      },
+      {
+        "name": "CHilonzor tumani",
+        "full_name": "Tohirjon 123",
+        "phone": "12372615"
+      }
+    ],
+    "name": "toshkent"
+  },
 '''

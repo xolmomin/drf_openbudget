@@ -50,8 +50,9 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework.viewsets import ModelViewSet
 
-from apps.models import New, UseFulInfo
-from apps.serializers import NewListModelSerializer, NewDetailModelSerializer, UseFulInfoListModelSerializer
+from apps.models import New, UseFulInfo, ResponsiblePerson, District, Region
+from apps.serializers import NewListModelSerializer, NewDetailModelSerializer, UseFulInfoListModelSerializer, \
+    ResponsiblePersonModelSerializer, DistrictModelSerializer, DistrictResponsiblePersonModelSerializer
 
 
 class BaseAPIView(GenericAPIView):
@@ -95,6 +96,7 @@ class NewModelViewSet(ModelViewSet):
     #     return Response({'status': 'OK'})
     #
 
+
 # class UserListAPIView(ListAPIView, GenericViewSet):
 #     queryset = New.objects.all()
 #     serializer_class = NewModelSerializer
@@ -113,3 +115,14 @@ class NewModelViewSet(ModelViewSet):
 #     @action(methods=['GET'], detail=True, url_path='product', url_name='12321')
 #     def report(self, request, id=None):
 #         return Response({'status': id})
+
+
+class ResponsePersonModelViewSet(ModelViewSet):
+    queryset = ResponsiblePerson.objects.all()
+    serializer_class = ResponsiblePersonModelSerializer
+
+    @action(methods=['GET'], detail=False, queryset=Region.objects.all(), serializer_class=DistrictResponsiblePersonModelSerializer)
+    def person(self, request, pk=None):
+        queryset = self.get_queryset()
+        serializered_data = self.serializer_class(queryset, many=True)
+        return Response(serializered_data.data)
