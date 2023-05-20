@@ -100,6 +100,9 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 CKEDITOR_UPLOAD_PATH = "uploads/"
 
 REST_FRAMEWORK = {
+    'DEFAULT_PARSER_CLASSES': [
+        'rest_framework.parsers.JSONParser',
+    ],
     'DATE_INPUT_FORMATS': ["%H:%M %d-%m-%Y"],
     'DATETIME_FORMAT': '%H:%M %d-%m-%Y',
     'DEFAULT_PAGINATION_CLASS': 'apps.pagination.StandardResultsSetPagination',
@@ -107,12 +110,12 @@ REST_FRAMEWORK = {
 }
 
 # django-storages settings
-DEFAULT_FILE_STORAGE = "storages.backends.s3boto3.S3Boto3Storage"
+# DEFAULT_FILE_STORAGE = "storages.backends.s3boto3.S3Boto3Storage"
 
-AWS_ACCESS_KEY_ID = os.getenv("MINIO_ROOT_USER")
-AWS_SECRET_ACCESS_KEY = os.getenv("MINIO_ROOT_PASSWORD")
-AWS_STORAGE_BUCKET_NAME = os.getenv("MINIO_BUCKET_NAME")
-AWS_S3_ENDPOINT_URL = os.getenv("MINIO_ENDPOINT")
+# AWS_ACCESS_KEY_ID = os.getenv("MINIO_ROOT_USER")
+# AWS_SECRET_ACCESS_KEY = os.getenv("MINIO_ROOT_PASSWORD")
+# AWS_STORAGE_BUCKET_NAME = os.getenv("MINIO_BUCKET_NAME")
+# AWS_S3_ENDPOINT_URL = os.getenv("MINIO_ENDPOINT")
 
 #
 # AWS_DEFAULT_ACL = None
