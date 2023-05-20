@@ -42,11 +42,35 @@
 #     queryset = New.objects.all()
 #     serializer_class = NewModelSerializer
 #
+from django.db.models import F
+from django.shortcuts import redirect
+from rest_framework.decorators import action
+from rest_framework.generics import GenericAPIView
 from rest_framework.response import Response
+from rest_framework.views import APIView
 from rest_framework.viewsets import ModelViewSet
 
-from apps.models import New
-from apps.serializers import NewListModelSerializer, NewDetailModelSerializer
+from apps.models import New, UseFulInfo
+from apps.serializers import NewListModelSerializer, NewDetailModelSerializer, UseFulInfoListModelSerializer
+
+
+class BaseAPIView(GenericAPIView):
+    serializer_class = NewListModelSerializer
+
+    def get(self, request, *args, **kwargs):
+        return Response({'msg': 'hello world'})
+
+
+class UseFulModelVUseFulInfo(ModelViewSet):
+    queryset = UseFulInfo.objects.all()
+    serializer_class = UseFulInfoListModelSerializer
+
+    @action(methods=['GET'], detail=False)
+    def counter(self, request, pk=None):
+        if file_id := request.GET.get('file_id'):
+            UseFulInfo.objects.filter(id=file_id).update(number_download=F('number_download') + 1)
+            return Response()
+        return Response('Not Found', status=404)
 
 
 class NewModelViewSet(ModelViewSet):
@@ -54,6 +78,7 @@ class NewModelViewSet(ModelViewSet):
     serializer_class = NewListModelSerializer
 
     def retrieve(self, request, *args, **kwargs):
+        self.get_queryset()
         instance = self.get_object()
         instance.view_count += 1
         instance.save()
