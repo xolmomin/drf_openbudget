@@ -96,7 +96,6 @@ class NewModelViewSet(ModelViewSet):
     #     return Response({'status': 'OK'})
     #
 
-
 # class UserListAPIView(ListAPIView, GenericViewSet):
 #     queryset = New.objects.all()
 #     serializer_class = NewModelSerializer
