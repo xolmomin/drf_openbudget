@@ -1,7 +1,9 @@
+from django.conf.urls.i18n import i18n_patterns
 from django.conf.urls.static import static
 from django.contrib import admin
 from django.urls import path, include, re_path
 
+from apps.views import ProductListCreateAPIView
 from root.settings import MEDIA_URL, MEDIA_ROOT
 
 from rest_framework import permissions
@@ -21,12 +23,14 @@ schema_view = get_schema_view(
    public=True,
    permission_classes=[permissions.AllowAny],
 )
-urlpatterns = [
-   re_path(r'^swagger(?P<format>\.json|\.yaml)$', schema_view.without_ui(cache_timeout=0),
-          name='schema-json'),
-   re_path(r'^swagger/$', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),
-   re_path(r'^redoc/$', schema_view.with_ui('redoc', cache_timeout=0), name='schema-redoc'),
+from django.utils.translation import gettext_lazy as _
 
+urlpatterns = [
+   path('', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),
    path('admin/', admin.site.urls),
    path('', include('apps.urls')),
 ] + static(MEDIA_URL, document_root=MEDIA_ROOT)
+
+urlpatterns += i18n_patterns(
+    path(_("product"), ProductListCreateAPIView.as_view()),
+)

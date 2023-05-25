@@ -17,6 +17,9 @@ pillow = "^9.5.0"
 drf-yasg = "^1.21.5"
 django-storages = "^1.13.2"
 boto3 = "^1.26.137"
+djangorestframework-simplejwt = "^5.2.2"
+django-parler = "^2.3"
+django-parler-rest = "^2.2"
 
 
 [build-system]

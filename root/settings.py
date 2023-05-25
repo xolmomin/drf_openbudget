@@ -24,14 +24,17 @@ INSTALLED_APPS = [
 
     # Third party
     'rest_framework',
+    'rest_framework_simplejwt',
     'drf_yasg',
     'mptt',
+    'parler',
     'ckeditor_uploader',
 ]
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'django.middleware.locale.LocaleMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -81,7 +84,35 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+from django.utils.translation import gettext_lazy as _
+
+
+PARLER_DEFAULT_LANGUAGE_CODE = 'en'
+
+
+PARLER_LANGUAGES = {
+    None: (
+        {'code': 'uz',},
+        {'code': 'ru',},
+        {'code': 'en',},
+    ),
+    # 'default': {
+    #     'fallbacks': ['en'],          # defaults to PARLER_DEFAULT_LANGUAGE_CODE
+    #     'hide_untranslated': False,   # the default; let .active_translations() return fallbacks too.
+    # }
+}
+
+LANGUAGES = (
+    ('uz', _('Uz')),
+    ('ru', _('Ru')),
+    ('en', _('En')),
+)
+
 LANGUAGE_CODE = 'uz'
+
+LOCALE_PATHS = (
+    os.path.join(BASE_DIR, 'locale'),
+)
 
 TIME_ZONE = 'Asia/Tashkent'
 
@@ -100,6 +131,12 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 CKEDITOR_UPLOAD_PATH = "uploads/"
 
 REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        # 'rest_framework.authentication.BasicAuthentication',
+        # 'rest_framework.authentication.SessionAuthentication',
+        # 'rest_framework.authentication.TokenAuthentication'
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+    ],
     'DEFAULT_PARSER_CLASSES': [
         'rest_framework.parsers.JSONParser',
     ],

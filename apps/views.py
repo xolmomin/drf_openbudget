@@ -46,13 +46,13 @@ from django.db.models import F
 from rest_framework.decorators import action
 from rest_framework.generics import GenericAPIView, ListCreateAPIView
 from rest_framework.parsers import MultiPartParser, FormParser
+from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet
 
 from apps.models import New, UseFulInfo, ResponsiblePerson, Region, Product, ProductImage
 from apps.serializers import NewListModelSerializer, NewDetailModelSerializer, UseFulInfoListModelSerializer, \
-    ResponsiblePersonModelSerializer, DistrictResponsiblePersonModelSerializer, \
-    ProductModelSerializer
+    ResponsiblePersonModelSerializer, DistrictResponsiblePersonModelSerializer, ProductTranslatableModelSerializer
 
 
 class BaseAPIView(GenericAPIView):
@@ -96,6 +96,7 @@ class NewModelViewSet(ModelViewSet):
     #     return Response({'status': 'OK'})
     #
 
+
 # class UserListAPIView(ListAPIView, GenericViewSet):
 #     queryset = New.objects.all()
 #     serializer_class = NewModelSerializer
@@ -129,20 +130,20 @@ class ResponsePersonModelViewSet(ModelViewSet):
 
 
 from drf_yasg.utils import swagger_auto_schema
-
 from drf_yasg import openapi
 
 images_params = openapi.Parameter('images', openapi.IN_FORM, description="test manual param", type=openapi.TYPE_ARRAY,
-                               items=openapi.Items(type=openapi.TYPE_FILE),
-                               required=True)
+                                  items=openapi.Items(type=openapi.TYPE_FILE),
+                                  required=True)
 
 
 class ProductListCreateAPIView(ListCreateAPIView):
     queryset = Product.objects.all()
     parser_classes = MultiPartParser, FormParser
-    serializer_class = ProductModelSerializer
+    serializer_class = ProductTranslatableModelSerializer
+    # permission_classes = IsAuthenticated,
 
-    @swagger_auto_schema(manual_parameters=[images_params])
+    @swagger_auto_schema(tags=["Authors"], manual_parameters=[images_params])
     def post(self, request, *args, **kwargs):
         images = request.FILES.getlist('images')
         response = super().post(request, *args, **kwargs)
@@ -151,4 +152,3 @@ class ProductListCreateAPIView(ListCreateAPIView):
             images_list.append(ProductImage(image=image, product_id=response.data['id']))
         ProductImage.objects.bulk_create(images_list)
         return response
-

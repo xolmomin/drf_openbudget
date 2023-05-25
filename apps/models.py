@@ -1,6 +1,9 @@
 from ckeditor.fields import RichTextField
 from django.db.models import Model, CharField, DateTimeField, IntegerField, ImageField, FileField, ForeignKey, CASCADE, \
     OneToOneField
+from django.utils.translation import gettext_lazy as _
+from django.db import models
+from parler.models import TranslatableModel, TranslatedFields
 
 
 class UseFulInfo(Model):
@@ -36,14 +39,27 @@ class ResponsiblePerson(Model):
     district = OneToOneField('apps.District', CASCADE)
 
 
-class Product(Model):
-    name = CharField(max_length=255)
+class Category(TranslatableModel):
+    translations = TranslatedFields(
+        name=CharField(_("Name"), max_length=200, null=True, blank=True)
+    )
+
+
+class Product(TranslatableModel):
+    price = IntegerField(default=0)
+    translations = TranslatedFields(
+        name=CharField(_("Name"), max_length=200, null=True, blank=True)
+    )
+    category = ForeignKey('apps.Category', CASCADE)
+
+    class Meta:
+        verbose_name = _("Product")
+        verbose_name_plural = _("Products")
 
 
 class ProductImage(Model):
     image = ImageField(upload_to='product/images')
     product = ForeignKey('apps.Product', CASCADE)
-
 
 
 '''
