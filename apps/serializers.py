@@ -5,13 +5,18 @@ from rest_framework.serializers import ListSerializer, ModelSerializer
 
 from apps.models import (District, New, Product, Region, ResponsiblePerson,
                          UseFulInfo)
-from root import settings
 
 
 class NewListModelSerializer(ModelSerializer):
     class Meta:
         model = New
         fields = ('id', 'title', 'view_count', 'created_at')
+
+
+class RegionListModelSerializer(ModelSerializer):
+    class Meta:
+        model = Region
+        fields = ('__all__')
 
 
 class UseFulInfoListModelSerializer(ModelSerializer):

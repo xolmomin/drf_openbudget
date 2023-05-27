@@ -5,7 +5,7 @@ from rest_framework_simplejwt.views import (TokenObtainPairView,
                                             TokenRefreshView, TokenVerifyView, TokenBlacklistView)
 
 from apps.views import (BaseAPIView, NewModelViewSet, ProductListCreateAPIView,
-                        ResponsePersonModelViewSet, UseFulModelVUseFulInfo)
+                        ResponsePersonModelViewSet, UseFulModelVUseFulInfo, RegionModelViewSet)
 
 # from apps.views import NewListAPIView, NewCreateAPIView, NewDestroyAPIView, NewUpdateAPIView, NewRetrieveAPIView, \
 #     NewRetrieveUpdateDestroyAPIView, NewListCreateAPIView
@@ -13,14 +13,15 @@ from apps.views import (BaseAPIView, NewModelViewSet, ProductListCreateAPIView,
 router = DefaultRouter()
 router.register('use', UseFulModelVUseFulInfo, 'use')
 router.register('new', NewModelViewSet, 'new')
+router.register('region', RegionModelViewSet, 'region')
 
 router.register('response-person', ResponsePersonModelViewSet, 'response-person')
 # router.register('district', DistrictModelViewSet, 'district')
 
 
 urlpatterns = [
-    # path('', include(router.urls)),
-    path('base', BaseAPIView.as_view()),
+    path('', include(router.urls)),
+    path('base', BaseAPIView.as_view(), name='base_view'),
 
     # path('news', NewListCreateAPIView.as_view()),
     # path('UserListAPIView', NewListCreateAPIView.as_view()),

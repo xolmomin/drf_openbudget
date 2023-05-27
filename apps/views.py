@@ -54,10 +54,18 @@ from apps.models import (New, Product, ProductImage, Region, ResponsiblePerson,
                          UseFulInfo)
 from apps.serializers import (DistrictResponsiblePersonModelSerializer,
                               NewDetailModelSerializer, NewListModelSerializer,
-                              ProductTranslatableModelSerializer,
+                              ProductTranslatableModelSerializer, RegionListModelSerializer,
                               ResponsiblePersonModelSerializer,
                               UseFulInfoListModelSerializer)
 from apps.throttle import CustomUserRateThrottle
+
+'''
+
+v1 (id, name, description, price)
+v2 (id, name, price)
+# v2 (id, name, description, price)
+
+'''
 
 
 class BaseAPIView(GenericAPIView):
@@ -79,6 +87,11 @@ class UseFulModelVUseFulInfo(ModelViewSet):
             UseFulInfo.objects.filter(id=file_id).update(number_download=F('number_download') + 1)
             return Response()
         return Response('Not Found', status=404)
+
+
+class RegionModelViewSet(ModelViewSet):
+    queryset = Region.objects.order_by('id')
+    serializer_class = RegionListModelSerializer
 
 
 class NewModelViewSet(ModelViewSet):

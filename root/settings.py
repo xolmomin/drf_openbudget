@@ -134,13 +134,13 @@ CKEDITOR_UPLOAD_PATH = "uploads/"
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [
         # 'rest_framework.authentication.BasicAuthentication',
-        'rest_framework.authentication.SessionAuthentication',
+        # 'rest_framework.authentication.SessionAuthentication',
         # 'rest_framework.authentication.TokenAuthentication'
         'rest_framework_simplejwt.authentication.JWTAuthentication',
     ],
-    'DEFAULT_PARSER_CLASSES': [
-        'rest_framework.parsers.JSONParser',
-    ],
+    # 'DEFAULT_PARSER_CLASSES': [
+    #     'rest_framework.parsers.JSONParser',
+    # ],
     'DATE_INPUT_FORMATS': ["%H:%M %d-%m-%Y"],
     'DATETIME_FORMAT': '%H:%M %d-%m-%Y',
     'DEFAULT_PAGINATION_CLASS': 'apps.pagination.StandardResultsSetPagination',
