@@ -1,5 +1,6 @@
 import os
 from pathlib import Path
+
 from dotenv import load_dotenv
 from storages.backends.s3boto3 import S3Boto3Storage
 
@@ -25,6 +26,7 @@ INSTALLED_APPS = [
     # Third party
     'rest_framework',
     'rest_framework_simplejwt',
+    'rest_framework_simplejwt.token_blacklist',
     'drf_yasg',
     'mptt',
     'parler',
@@ -86,7 +88,6 @@ AUTH_PASSWORD_VALIDATORS = [
 
 from django.utils.translation import gettext_lazy as _
 
-
 PARLER_DEFAULT_LANGUAGE_CODE = 'en'
 
 
@@ -133,7 +134,7 @@ CKEDITOR_UPLOAD_PATH = "uploads/"
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [
         # 'rest_framework.authentication.BasicAuthentication',
-        # 'rest_framework.authentication.SessionAuthentication',
+        'rest_framework.authentication.SessionAuthentication',
         # 'rest_framework.authentication.TokenAuthentication'
         'rest_framework_simplejwt.authentication.JWTAuthentication',
     ],
@@ -143,7 +144,15 @@ REST_FRAMEWORK = {
     'DATE_INPUT_FORMATS': ["%H:%M %d-%m-%Y"],
     'DATETIME_FORMAT': '%H:%M %d-%m-%Y',
     'DEFAULT_PAGINATION_CLASS': 'apps.pagination.StandardResultsSetPagination',
-    'PAGE_SIZE': 2
+    'PAGE_SIZE': 2,
+    # 'DEFAULT_THROTTLE_CLASSES': [
+    #     'rest_framework.throttling.AnonRateThrottle',
+    #     'rest_framework.throttling.UserRateThrottle'
+    # ],
+    'DEFAULT_THROTTLE_RATES': {
+        'anon': '5/minute',
+        'user': '10/minute'
+    }
 }
 
 # django-storages settings
@@ -152,7 +161,7 @@ REST_FRAMEWORK = {
 # AWS_ACCESS_KEY_ID = os.getenv("MINIO_ROOT_USER")
 # AWS_SECRET_ACCESS_KEY = os.getenv("MINIO_ROOT_PASSWORD")
 # AWS_STORAGE_BUCKET_NAME = os.getenv("MINIO_BUCKET_NAME")
-# AWS_S3_ENDPOINT_URL = os.getenv("MINIO_ENDPOINT")
+# AWS_S3_ENDPOINT_URL = os.getenv("MINIO_END POINT")
 
 #
 # AWS_DEFAULT_ACL = None

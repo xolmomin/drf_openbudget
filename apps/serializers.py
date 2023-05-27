@@ -1,9 +1,10 @@
 from parler_rest.fields import TranslatedFieldsField
 from parler_rest.serializers import TranslatableModelSerializer
-from rest_framework.fields import CharField, ImageField, FileField
-from rest_framework.serializers import ModelSerializer, ListSerializer
+from rest_framework.fields import CharField, FileField, ImageField
+from rest_framework.serializers import ListSerializer, ModelSerializer
 
-from apps.models import New, UseFulInfo, ResponsiblePerson, Region, District, Product
+from apps.models import (District, New, Product, Region, ResponsiblePerson,
+                         UseFulInfo)
 from root import settings
 
 

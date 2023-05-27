@@ -1,7 +1,7 @@
 from django.contrib import admin
 from parler.admin import TranslatableAdmin
 
-from apps.models import UseFulInfo, Product, Category
+from apps.models import Category, Product, UseFulInfo
 
 
 @admin.register(UseFulInfo)

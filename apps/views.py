@@ -45,18 +45,25 @@
 from django.db.models import F
 from rest_framework.decorators import action
 from rest_framework.generics import GenericAPIView, ListCreateAPIView
-from rest_framework.parsers import MultiPartParser, FormParser
-from rest_framework.permissions import AllowAny, IsAuthenticated
+from rest_framework.parsers import FormParser, MultiPartParser
+from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet
 
-from apps.models import New, UseFulInfo, ResponsiblePerson, Region, Product, ProductImage
-from apps.serializers import NewListModelSerializer, NewDetailModelSerializer, UseFulInfoListModelSerializer, \
-    ResponsiblePersonModelSerializer, DistrictResponsiblePersonModelSerializer, ProductTranslatableModelSerializer
+from apps.models import (New, Product, ProductImage, Region, ResponsiblePerson,
+                         UseFulInfo)
+from apps.serializers import (DistrictResponsiblePersonModelSerializer,
+                              NewDetailModelSerializer, NewListModelSerializer,
+                              ProductTranslatableModelSerializer,
+                              ResponsiblePersonModelSerializer,
+                              UseFulInfoListModelSerializer)
+from apps.throttle import CustomUserRateThrottle
 
 
 class BaseAPIView(GenericAPIView):
     serializer_class = NewListModelSerializer
+    permission_classes = [IsAuthenticated]
+    throttle_classes = [CustomUserRateThrottle]
 
     def get(self, request, *args, **kwargs):
         return Response({'msg': 'hello world'})
@@ -129,8 +136,8 @@ class ResponsePersonModelViewSet(ModelViewSet):
         return Response(serializered_data.data)
 
 
-from drf_yasg.utils import swagger_auto_schema
 from drf_yasg import openapi
+from drf_yasg.utils import swagger_auto_schema
 
 images_params = openapi.Parameter('images', openapi.IN_FORM, description="test manual param", type=openapi.TYPE_ARRAY,
                                   items=openapi.Items(type=openapi.TYPE_FILE),
@@ -141,6 +148,7 @@ class ProductListCreateAPIView(ListCreateAPIView):
     queryset = Product.objects.all()
     parser_classes = MultiPartParser, FormParser
     serializer_class = ProductTranslatableModelSerializer
+
     # permission_classes = IsAuthenticated,
 
     @swagger_auto_schema(tags=["Authors"], manual_parameters=[images_params])

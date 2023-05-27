@@ -1,15 +1,13 @@
 from django.conf.urls.i18n import i18n_patterns
 from django.conf.urls.static import static
 from django.contrib import admin
-from django.urls import path, include, re_path
+from django.urls import include, path, re_path
+from drf_yasg import openapi
+from drf_yasg.views import get_schema_view
+from rest_framework import permissions
 
 from apps.views import ProductListCreateAPIView
-from root.settings import MEDIA_URL, MEDIA_ROOT
-
-from rest_framework import permissions
-from drf_yasg.views import get_schema_view
-from drf_yasg import openapi
-
+from root.settings import MEDIA_ROOT, MEDIA_URL
 
 schema_view = get_schema_view(
    openapi.Info(

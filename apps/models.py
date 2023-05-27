@@ -1,8 +1,9 @@
 from ckeditor.fields import RichTextField
-from django.db.models import Model, CharField, DateTimeField, IntegerField, ImageField, FileField, ForeignKey, CASCADE, \
-    OneToOneField
-from django.utils.translation import gettext_lazy as _
 from django.db import models
+from django.db.models import (CASCADE, CharField, DateTimeField, FileField,
+                              ForeignKey, ImageField, IntegerField, Model,
+                              OneToOneField)
+from django.utils.translation import gettext_lazy as _
 from parler.models import TranslatableModel, TranslatedFields
 
 

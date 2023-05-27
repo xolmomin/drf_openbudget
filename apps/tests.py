@@ -1,3 +1,9 @@
-from django.test import TestCase
+'''
+unli = 'euoia'
+s = 'gjdghsfiuwehrejwoiwetre'
+iueeoiee
 
-# Create your tests here.
+'''
+
+
+
