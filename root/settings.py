@@ -1,5 +1,7 @@
 import os
+from functools import cached_property, lru_cache
 from pathlib import Path
+import dj_database_url
 
 from dotenv import load_dotenv
 from storages.backends.s3boto3 import S3Boto3Storage
@@ -25,8 +27,8 @@ INSTALLED_APPS = [
 
     # Third party
     'rest_framework',
-    'rest_framework_simplejwt',
-    'rest_framework_simplejwt.token_blacklist',
+    # 'rest_framework_simplejwt',
+    # 'rest_framework_simplejwt.token_blacklist',
     'drf_yasg',
     'mptt',
     'parler',
@@ -65,9 +67,19 @@ TEMPLATES = [
 WSGI_APPLICATION = 'root.wsgi.application'
 
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+    'default': dj_database_url.config(default=os.getenv('DB_URL', 'postgres://postgres:1@localhost:5432/p8_database'), conn_max_age=600,
+                                      conn_health_checks=True, )
+    #     # postgresql://[user[:password]@][netloc][:port][/dbname][?param1=value1&...]`
+}
+
+CACHES = {
+    "default": {
+        "BACKEND": "django_redis.cache.RedisCache",
+        "LOCATION": "redis://127.0.0.1:6379/1",
+        "OPTIONS": {
+            "CLIENT_CLASS": "django_redis.client.DefaultClient"
+        },
+        "KEY_PREFIX": "django"
     }
 }
 
@@ -90,12 +102,11 @@ from django.utils.translation import gettext_lazy as _
 
 PARLER_DEFAULT_LANGUAGE_CODE = 'en'
 
-
 PARLER_LANGUAGES = {
     None: (
-        {'code': 'uz',},
-        {'code': 'ru',},
-        {'code': 'en',},
+        {'code': 'uz', },
+        {'code': 'ru', },
+        {'code': 'en', },
     ),
     # 'default': {
     #     'fallbacks': ['en'],          # defaults to PARLER_DEFAULT_LANGUAGE_CODE
@@ -130,7 +141,6 @@ MEDIA_ROOT = os.path.join(BASE_DIR / 'media')
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 CKEDITOR_UPLOAD_PATH = "uploads/"
-
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [
         # 'rest_framework.authentication.BasicAuthentication',

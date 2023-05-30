@@ -42,6 +42,7 @@
 #     queryset = New.objects.all()
 #     serializer_class = NewModelSerializer
 #
+from django.core.cache import cache
 from django.db.models import F
 from rest_framework.decorators import action
 from rest_framework.generics import GenericAPIView, ListCreateAPIView
@@ -70,10 +71,14 @@ v2 (id, name, price)
 
 class BaseAPIView(GenericAPIView):
     serializer_class = NewListModelSerializer
-    permission_classes = [IsAuthenticated]
-    throttle_classes = [CustomUserRateThrottle]
+    # permission_classes = [IsAuthenticated]
+    # throttle_classes = [CustomUserRateThrottle]
 
     def get(self, request, *args, **kwargs):
+        # phone = '998935248052'
+        # code = '35242'
+        # cache.set(phone, code, timeout=25)
+        # print(phone)
         return Response({'msg': 'hello world'})
 
 
