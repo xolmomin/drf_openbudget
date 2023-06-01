@@ -26,6 +26,9 @@ google-api-python-client = "^2.87.0"
 django-redis = "^5.2.0"
 dj-database-url = "^2.0.0"
 psycopg2-binary = "^2.9.6"
+gunicorn = "^20.1.0"
+celery = "^5.2.7"
+flower = "^1.2.0"
 
 
 [build-system]

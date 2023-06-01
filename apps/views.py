@@ -59,6 +59,7 @@ from apps.serializers import (DistrictResponsiblePersonModelSerializer,
                               ResponsiblePersonModelSerializer,
                               UseFulInfoListModelSerializer)
 from apps.throttle import CustomUserRateThrottle
+from root.tasks import notify_telegram_group
 
 '''
 
@@ -75,11 +76,12 @@ class BaseAPIView(GenericAPIView):
     # throttle_classes = [CustomUserRateThrottle]
 
     def get(self, request, *args, **kwargs):
+        response = notify_telegram_group.delay()
         # phone = '998935248052'
         # code = '35242'
         # cache.set(phone, code, timeout=25)
         # print(phone)
-        return Response({'msg': 'hello world'})
+        return Response({'msg': response.id})
 
 
 class UseFulModelVUseFulInfo(ModelViewSet):

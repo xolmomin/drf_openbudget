@@ -1,16 +1,16 @@
 import os
-from functools import cached_property, lru_cache
+from datetime import timedelta
 from pathlib import Path
-import dj_database_url
 
 from dotenv import load_dotenv
 from storages.backends.s3boto3 import S3Boto3Storage
+import dj_database_url
 
 load_dotenv()
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-SECRET_KEY = os.getenv('SECRET_KEY')
+SECRET_KEY = os.getenv('SECRET_KEY', '421432')
 
 DEBUG = True
 
@@ -27,7 +27,7 @@ INSTALLED_APPS = [
 
     # Third party
     'rest_framework',
-    # 'rest_framework_simplejwt',
+    'rest_framework_simplejwt',
     # 'rest_framework_simplejwt.token_blacklist',
     'drf_yasg',
     'mptt',
@@ -67,21 +67,33 @@ TEMPLATES = [
 WSGI_APPLICATION = 'root.wsgi.application'
 
 DATABASES = {
-    'default': dj_database_url.config(default=os.getenv('DB_URL', 'postgres://postgres:1@localhost:5432/p8_database'), conn_max_age=600,
-                                      conn_health_checks=True, )
-    #     # postgresql://[user[:password]@][netloc][:port][/dbname][?param1=value1&...]`
-}
-
-CACHES = {
-    "default": {
-        "BACKEND": "django_redis.cache.RedisCache",
-        "LOCATION": "redis://127.0.0.1:6379/1",
-        "OPTIONS": {
-            "CLIENT_CLASS": "django_redis.client.DefaultClient"
-        },
-        "KEY_PREFIX": "django"
+    'default': {
+        'ENGINE': os.getenv('SQL_ENGINE', 'django.db.backends.sqlite3'),
+        'NAME': os.getenv('SQL_DATABASE', os.path.join(BASE_DIR, "db.sqlite3")),
+        'USER': os.getenv('SQL_USER'),
+        'PASSWORD': os.getenv('SQL_PASSWORD'),
+        'HOST': os.getenv('SQL_HOST'),
+        'PORT': os.getenv('SQL_PORT')
     }
 }
+
+# DATABASES = {
+#     'default': dj_database_url.config(default=os.getenv('DB_URL', 'postgres://postgres:1@localhost:5432/p8_database'),
+#                                       conn_max_age=600,
+#                                       conn_health_checks=True, )
+#     #     # postgresql://[user[:password]@][netloc][:port][/dbname][?param1=value1&...]`
+# }
+
+# CACHES = {
+#     "default": {
+#         "BACKEND": "django_redis.cache.RedisCache",
+#         "LOCATION": "redis://127.0.0.1:6379/1",
+#         "OPTIONS": {
+#             "CLIENT_CLASS": "django_redis.client.DefaultClient"
+#         },
+#         "KEY_PREFIX": "django"
+#     }
+# }
 
 AUTH_PASSWORD_VALIDATORS = [
     {
@@ -142,6 +154,8 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 CKEDITOR_UPLOAD_PATH = "uploads/"
 REST_FRAMEWORK = {
+    "ACCESS_TOKEN_LIFETIME": timedelta(minutes=25),
+    "REFRESH_TOKEN_LIFETIME": timedelta(days=1),
     'DEFAULT_AUTHENTICATION_CLASSES': [
         # 'rest_framework.authentication.BasicAuthentication',
         # 'rest_framework.authentication.SessionAuthentication',
@@ -159,10 +173,10 @@ REST_FRAMEWORK = {
     #     'rest_framework.throttling.AnonRateThrottle',
     #     'rest_framework.throttling.UserRateThrottle'
     # ],
-    'DEFAULT_THROTTLE_RATES': {
-        'anon': '5/minute',
-        'user': '10/minute'
-    }
+    # 'DEFAULT_THROTTLE_RATES': {
+    #     'anon': '5/minute',
+    #     'user': '10/minute'
+    # }
 }
 
 # django-storages settings
@@ -177,3 +191,15 @@ REST_FRAMEWORK = {
 # AWS_DEFAULT_ACL = None
 # AWS_QUERYSTRING_AUTH = True
 # AWS_S3_FILE_OVERWRITE = False
+
+
+CELERY_BROKER_URL = os.getenv('CELERY_BROKER')
+
+# app.conf.beat_schedule = {
+#     'add-every-30-seconds': {
+#         'task': 'tasks.add',
+#         'schedule': 30.0,
+#         'args': (16, 16)
+#     },
+# }
+# app.conf.timezone = 'UTC'
