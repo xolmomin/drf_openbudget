@@ -4,6 +4,8 @@ from django.db.models import (CASCADE, CharField, DateTimeField, FileField,
                               ForeignKey, ImageField, IntegerField, Model,
                               OneToOneField)
 from django.utils.translation import gettext_lazy as _
+from mptt.fields import TreeForeignKey
+from mptt.models import MPTTModel
 from parler.models import TranslatableModel, TranslatedFields
 
 
@@ -40,17 +42,21 @@ class ResponsiblePerson(Model):
     district = OneToOneField('apps.District', CASCADE)
 
 
-class Category(TranslatableModel):
-    translations = TranslatedFields(
-        name=CharField(_("Name"), max_length=200, null=True, blank=True)
-    )
+class Category(MPTTModel):
+    name = CharField(max_length=200, null=True, blank=True)
+    parent = TreeForeignKey('self', CASCADE, 'children', null=True, blank=True)
+
+    @property
+    def product_count(self):
+        return self.product_set.count()
+
+    def __str__(self):
+        return self.name
 
 
-class Product(TranslatableModel):
+class Product(Model):
     price = IntegerField(default=0)
-    translations = TranslatedFields(
-        name=CharField(_("Name"), max_length=200, null=True, blank=True)
-    )
+    name = CharField(max_length=200, null=True, blank=True)
     category = ForeignKey('apps.Category', CASCADE)
 
     class Meta:

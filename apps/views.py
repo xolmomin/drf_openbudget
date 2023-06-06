@@ -44,20 +44,23 @@
 #
 from django.core.cache import cache
 from django.db.models import F
+from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.decorators import action
+from rest_framework.filters import SearchFilter
 from rest_framework.generics import GenericAPIView, ListCreateAPIView
 from rest_framework.parsers import FormParser, MultiPartParser
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet
 
+from apps.filters import ProductFilterSet
 from apps.models import (New, Product, ProductImage, Region, ResponsiblePerson,
-                         UseFulInfo)
+                         UseFulInfo, Category)
 from apps.serializers import (DistrictResponsiblePersonModelSerializer,
                               NewDetailModelSerializer, NewListModelSerializer,
-                              ProductTranslatableModelSerializer, RegionListModelSerializer,
+                              ProductModelSerializer, RegionListModelSerializer,
                               ResponsiblePersonModelSerializer,
-                              UseFulInfoListModelSerializer)
+                              UseFulInfoListModelSerializer, CategoryModelSerializer)
 from apps.throttle import CustomUserRateThrottle
 from root.tasks import notify_telegram_group
 
@@ -72,6 +75,7 @@ v2 (id, name, price)
 
 class BaseAPIView(GenericAPIView):
     serializer_class = NewListModelSerializer
+
     # permission_classes = [IsAuthenticated]
     # throttle_classes = [CustomUserRateThrottle]
 
@@ -164,12 +168,25 @@ images_params = openapi.Parameter('images', openapi.IN_FORM, description="test m
                                   required=True)
 
 
+class CategoryListCreateAPIView(ListCreateAPIView):
+    queryset = Category.objects.filter()
+    serializer_class = CategoryModelSerializer
+
+
 class ProductListCreateAPIView(ListCreateAPIView):
     queryset = Product.objects.all()
     parser_classes = MultiPartParser, FormParser
-    serializer_class = ProductTranslatableModelSerializer
-
+    serializer_class = ProductModelSerializer
+    filter_backends = (DjangoFilterBackend,)
+    # filterset_fields = ('price', 'name')
+    filterset_class = ProductFilterSet
+    # filterset_fields = {
+    #     'price': ['exact'],
+    #     'name': ['contains']
+    # }
+    # search_fields = ('name',)
     # permission_classes = IsAuthenticated,
+    pagination_class = None
 
     @swagger_auto_schema(tags=["Authors"], manual_parameters=[images_params])
     def post(self, request, *args, **kwargs):

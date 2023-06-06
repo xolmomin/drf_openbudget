@@ -1,10 +1,12 @@
 from parler_rest.fields import TranslatedFieldsField
 from parler_rest.serializers import TranslatableModelSerializer
-from rest_framework.fields import CharField, FileField, ImageField
+from rest_framework.fields import CharField, FileField, ImageField, ReadOnlyField
+from rest_framework.relations import PrimaryKeyRelatedField
 from rest_framework.serializers import ListSerializer, ModelSerializer
+from rest_framework.utils.field_mapping import get_nested_relation_kwargs
 
 from apps.models import (District, New, Product, Region, ResponsiblePerson,
-                         UseFulInfo)
+                         UseFulInfo, Category)
 
 
 class NewListModelSerializer(ModelSerializer):
@@ -95,9 +97,19 @@ class ResponsiblePersonModelSerializer(ModelSerializer):
 #         return result
 
 
-class ProductTranslatableModelSerializer(TranslatableModelSerializer):
-    translations = TranslatedFieldsField(shared_model=Product)
-
+class ProductModelSerializer(ModelSerializer):
     class Meta:
         model = Product
-        fields = ('translations',)
+        fields = '__all__'
+
+
+class CategoryModelSerializer(ModelSerializer):
+    class Meta:
+        model = Category
+        fields = ('id', 'name', 'parent')
+
+    # def to_representation(self, instance):
+    #     represent = super().to_representation(instance)
+    #     data = CategoryModelSerializer(instance.children.all(), many=True).data
+    #     represent['children'] = data if data else None
+    #     return represent

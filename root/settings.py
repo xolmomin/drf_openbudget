@@ -31,8 +31,9 @@ INSTALLED_APPS = [
     # 'rest_framework_simplejwt.token_blacklist',
     'drf_yasg',
     'mptt',
-    'parler',
+    # 'parler',
     'ckeditor_uploader',
+    'django_filters',
 ]
 
 MIDDLEWARE = [
@@ -109,34 +110,34 @@ AUTH_PASSWORD_VALIDATORS = [
         'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
     },
 ]
+#
+# from django.utils.translation import gettext_lazy as _
+#
+# PARLER_DEFAULT_LANGUAGE_CODE = 'en'
+#
+# PARLER_LANGUAGES = {
+#     None: (
+#         {'code': 'uz', },
+#         {'code': 'ru', },
+#         {'code': 'en', },
+#     ),
+#     # 'default': {
+#     #     'fallbacks': ['en'],          # defaults to PARLER_DEFAULT_LANGUAGE_CODE
+#     #     'hide_untranslated': False,   # the default; let .active_translations() return fallbacks too.
+#     # }
+# }
 
-from django.utils.translation import gettext_lazy as _
-
-PARLER_DEFAULT_LANGUAGE_CODE = 'en'
-
-PARLER_LANGUAGES = {
-    None: (
-        {'code': 'uz', },
-        {'code': 'ru', },
-        {'code': 'en', },
-    ),
-    # 'default': {
-    #     'fallbacks': ['en'],          # defaults to PARLER_DEFAULT_LANGUAGE_CODE
-    #     'hide_untranslated': False,   # the default; let .active_translations() return fallbacks too.
-    # }
-}
-
-LANGUAGES = (
-    ('uz', _('Uz')),
-    ('ru', _('Ru')),
-    ('en', _('En')),
-)
-
-LANGUAGE_CODE = 'uz'
-
-LOCALE_PATHS = (
-    os.path.join(BASE_DIR, 'locale'),
-)
+# LANGUAGES = (
+#     ('uz', _('Uz')),
+#     ('ru', _('Ru')),
+#     ('en', _('En')),
+# )
+#
+# LANGUAGE_CODE = 'uz'
+#
+# LOCALE_PATHS = (
+#     os.path.join(BASE_DIR, 'locale'),
+# )
 
 TIME_ZONE = 'Asia/Tashkent'
 
@@ -168,7 +169,7 @@ REST_FRAMEWORK = {
     'DATE_INPUT_FORMATS': ["%H:%M %d-%m-%Y"],
     'DATETIME_FORMAT': '%H:%M %d-%m-%Y',
     'DEFAULT_PAGINATION_CLASS': 'apps.pagination.StandardResultsSetPagination',
-    'PAGE_SIZE': 2,
+    'PAGE_SIZE': 10,
     # 'DEFAULT_THROTTLE_CLASSES': [
     #     'rest_framework.throttling.AnonRateThrottle',
     #     'rest_framework.throttling.UserRateThrottle'

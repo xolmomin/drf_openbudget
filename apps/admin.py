@@ -15,5 +15,5 @@ class ProductTranslatableAdmin(TranslatableAdmin):
 
 
 @admin.register(Category)
-class CategoryTranslatableAdmin(TranslatableAdmin):
+class CategoryTranslatableAdmin(admin.ModelAdmin):
     pass
