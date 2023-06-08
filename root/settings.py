@@ -155,7 +155,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 CKEDITOR_UPLOAD_PATH = "uploads/"
 REST_FRAMEWORK = {
-    "ACCESS_TOKEN_LIFETIME": timedelta(minutes=25),
+    "ACCESS_TOKEN_LIFETIME": timedelta(days=1),
     "REFRESH_TOKEN_LIFETIME": timedelta(days=1),
     'DEFAULT_AUTHENTICATION_CLASSES': [
         # 'rest_framework.authentication.BasicAuthentication',
@@ -204,3 +204,27 @@ CELERY_BROKER_URL = os.getenv('CELERY_BROKER')
 #     },
 # }
 # app.conf.timezone = 'UTC'
+
+
+SWAGGER_SETTINGS = {
+    'SECURITY_DEFINITIONS': {
+        'basic': {
+            'type': 'basic'
+        },
+        'Bearer': {
+            'type': 'apiKey',
+            'name': 'Authorization',
+            'in': 'header',
+            'description': 'Type in the *\'Value\'* input box below: **\'Bearer &lt;JWT&gt;\'**, '
+                           'where JWT is the JSON web token you get back when logging in.'
+        }
+    }
+}
+
+
+'''
+
+eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNjg2MjkzMTU0LCJpYXQiOjE2ODYyMDY3NTQsImp0aSI6ImJlNDIyZTAxN2YwYjQzM2M4ZjQ1MGY2NGY1NmY0OWE0IiwidXNlcl9pZCI6Mn0.ifnEbbE8l6JacMiQiT4RoCowUjY0DnDYiUVdO3QQZCQ
+
+'''
+

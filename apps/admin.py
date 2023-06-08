@@ -10,10 +10,28 @@ class UseFulInfoAdmin(admin.ModelAdmin):
 
 
 @admin.register(Product)
-class ProductTranslatableAdmin(TranslatableAdmin):
-    pass
+class ProductModelAdmin(admin.ModelAdmin):
+
+    def get_queryset(self, request):
+        query_set = super().get_queryset(request)
+        if request.user.is_superuser:
+            return query_set
+        return query_set.filter(owner=request.user)
+    #
+    # def get_queryset(self, request):
+    #     query_set = Product.objects.all()
+    #     if request.user.is_superuser:
+    #         return query_set
+    #     return query_set.filter(owner=request.user)
+    #
+    # def get_queryset(self, request):
+    #     query_set = super().get_queryset(request)
+    #     if request.user.is_superuser:
+    #         return query_set
+    #     return request.user.product_set.all()
+    #
 
 
 @admin.register(Category)
-class CategoryTranslatableAdmin(admin.ModelAdmin):
+class CategoryModelAdmin(admin.ModelAdmin):
     pass

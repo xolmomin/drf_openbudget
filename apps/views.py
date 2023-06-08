@@ -49,13 +49,14 @@ from rest_framework.decorators import action
 from rest_framework.filters import SearchFilter
 from rest_framework.generics import GenericAPIView, ListCreateAPIView
 from rest_framework.parsers import FormParser, MultiPartParser
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import IsAuthenticated, DjangoModelPermissions, AllowAny
 from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet
 
 from apps.filters import ProductFilterSet
 from apps.models import (New, Product, ProductImage, Region, ResponsiblePerson,
                          UseFulInfo, Category)
+from apps.permissions import CustomDjangoModelPermissions
 from apps.serializers import (DistrictResponsiblePersonModelSerializer,
                               NewDetailModelSerializer, NewListModelSerializer,
                               ProductModelSerializer, RegionListModelSerializer,
@@ -108,6 +109,17 @@ class RegionModelViewSet(ModelViewSet):
 class NewModelViewSet(ModelViewSet):
     queryset = New.objects.all()
     serializer_class = NewListModelSerializer
+    permission_classes = CustomDjangoModelPermissions,
+    http_method_names = ['get', 'delete']
+
+    # def get_queryset(self):
+    #     return super().get_queryset().filter(owner=self.request.user)
+    @action(methods=['GET'], detail=False, permission_classes=[CustomDjangoModelPermissions])
+    def get_premium(self, pk=None):
+        query_set = self.get_queryset().filter(is_premium=True)
+        # self.get_queryset().premium()
+        response = self.serializer_class(query_set, many=True).data
+        return Response(response)
 
     def retrieve(self, request, *args, **kwargs):
         self.get_queryset()
@@ -179,6 +191,7 @@ class ProductListCreateAPIView(ListCreateAPIView):
     serializer_class = ProductModelSerializer
     filter_backends = (DjangoFilterBackend,)
     # filterset_fields = ('price', 'name')
+    permission_classes = ''
     filterset_class = ProductFilterSet
     # filterset_fields = {
     #     'price': ['exact'],
